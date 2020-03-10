@@ -1,0 +1,132 @@
+@import "media-mixin";
+
+.sidebar {
+	position: absolute;
+	z-index: 5;
+	height: 100%;
+	background-color: #F3F4F9;
+	transition: width 300ms;
+	flex: none;
+	
+	@include media ((
+			width: (lg: 240px, sm: 104px, xs: 12px),
+	));
+	
+	&_expanded {
+		@include media ((
+				width: (sm: 246px, xs: 192px)
+		));
+	}
+	&:not(.sidebar_expanded) {
+		
+		.sidebar__menu-item-inner {
+			@include media ((
+					pointer-events: (xs: none)
+			));
+			
+			&_active {
+				@include media ((
+						border-color: (xs: transparent)
+				));
+			}
+		}
+	}
+}
+.sidebar__expand-button {
+	position: absolute;
+	top: 0;
+	left: 100%;
+	
+	@include media ((
+			display: (lg: none, sm: block)
+	));
+}
+.sidebar__expand-button-background {
+}
+.sidebar__expand-button-icon {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 26px;
+	margin: -12px 0 0 -16px;
+	font-size: 20px;
+	text-align: center;
+	cursor: pointer;
+}
+.sidebar__logo {
+	display: flex;
+	align-items: center;
+	
+	@include media ((
+			padding: (lg: 41px, sm: 41px, xs: 41px 20px)
+	));
+}
+.sidebar__logo-image {
+	flex: none;
+	@include media ((
+			width: (sm: 24px)
+	));
+}
+.sidebar__logo-name {
+	
+	margin-left: 10px;
+	overflow: hidden;
+	font-family: 'Poppins', sans-serif;
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 500;
+	line-height: 24px;
+	transition: width 300ms;
+	flex: none;
+	@include media ((
+			width: (lg: calc(100% - 38px - 24px), sm: calc(100% - 41px - 24px), xs: calc(100% - 20px - 24px))
+	));
+}
+
+.sidebar__menu {
+}
+
+.sidebar__menu-item {
+	display: flex;
+	align-items: center;
+	height: 64px;
+	user-select: none;
+}
+
+.sidebar__menu-item-inner {
+	display: flex;
+	align-items: center;
+	overflow: hidden;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 600;
+	line-height: 22px;
+	cursor: pointer;
+	border-left: 3px solid transparent;
+	flex-basis: 100%;
+	
+	@include media ((
+			padding-left: (lg: 38px, sm: 38px, xs: 17px)
+	));
+	
+	&_active {
+		color: #34ABE0;
+		border-color: #34ABE0;
+	}
+}
+.sidebar__menu-item-icon {
+	flex: none;
+	width: 24px;
+	font-size: 18px;
+	text-align: center;
+}
+.sidebar__menu-item-title {
+	margin-left: 14px;
+	overflow: hidden;
+	transition: width 300ms;
+	@include media ((
+			//                     border  p     icon                                                        p     icon
+			width: (lg: calc(100% - 3px - 38px - 22px), sm: calc(100% - 3px - 38px - 22px), xs: calc(100% - 20px - 22px))
+	));
+}

@@ -1,0 +1,30 @@
+@import "../fonts/icons/style.css";
+@import "media-mixin";
+
+@import "sidebar";
+@import "content";
+@import "tile";
+
+body {
+	margin: 0;
+	background-color: #E5E5E5;
+}
+* {
+	box-sizing: border-box;
+	-webkit-tap-highlight-color: transparent;
+}
+
+.page-body {
+	position: relative;
+	display: flex;
+	margin: 0 auto;
+	
+	@include media ((
+		width: (lg: 1440px, sm: 768px, xs: 320px)
+	));
+}
+.content {
+	@include media ((
+			width: (lg: 1200px, sm: 665px, xs: 308px)
+	));
+}

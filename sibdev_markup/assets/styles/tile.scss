@@ -1,0 +1,145 @@
+@import "media-mixin";
+
+.tile {
+	position: relative;
+	display: flex;
+	padding: 16px 20px;
+	cursor: pointer;
+	border-radius: 10px;
+	outline: none;
+	user-select: none;
+	
+	@include media ((
+			//width: (lg: calc(100%/3 - 20px), sm: calc(100%/2 - 20px), xs: calc(100% - 20px)),
+			height: (lg: 161px, sm: 144px, xs: 130px)
+	));
+	
+	&:focus-within .tile__stroke {
+		display: block;
+	}
+}
+.tile__text {
+	z-index: 2;
+	display: flex;
+	flex-flow: column;
+	justify-content: space-between;
+}
+.tile__top {
+
+}
+.tile__title {
+	font-family: 'Roboto', sans-serif;
+	font-style: normal;
+	font-weight: bold;
+	line-height: 16px;
+	
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	
+	@include media ((
+			font-size: (lg: 16px, sm: 14px, xs: 12px)
+	));
+}
+.tile__description {
+	margin-top: 4px;
+	font-family: 'Roboto', sans-serif;
+	font-style: normal;
+	font-weight: normal;
+	line-height: 16px;
+	
+	@include media ((
+			font-size: (lg: 16px, sm: 14px, xs: 12px)
+	));
+	
+	color: #000000;
+	opacity: 0.5;
+}
+.tile__bottom {
+
+}
+.tile__num {
+	display: flex;
+	align-items: center;
+	font-family: 'Roboto', sans-serif;
+	font-size: 36px;
+	font-style: normal;
+	
+	font-weight: 600;
+	line-height: 28px;
+	color: #DF212D;
+	
+	@include media ((
+			font-size: (lg: 36px, sm: 36px, xs: 28px),
+			line-height: (lg: 28px, sm: 28px, xs: 24px)
+	));
+}
+.tile__label {
+	display: flex;
+	align-items: center;
+	margin-top: 6px;
+	font-family: 'Roboto', sans-serif;
+	
+	font-style: normal;
+	font-weight: normal;
+	line-height: 16px;
+	letter-spacing: 0.4em;
+	
+	color: #000000;
+	text-transform: uppercase;
+	
+	opacity: 0.5;
+	
+	@include media ((
+			font-size: (lg: 16px, sm: 16px, xs: 12px),
+	));
+}
+.tile__image {
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: 2;
+	height: 100%;
+	margin-left: auto;
+	pointer-events: none;
+}
+.tile__stroke {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 3;
+	display: none;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+}
+.tile__background {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	pointer-events: none;
+}
+.tile__background-image {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1;
+	width: 100%;
+	height: 100%;
+}
+.tile__shadow {
+	position: absolute;
+	z-index: 0;
+	height: 50%;
+	width: 100%;
+	border-radius: 10px;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+
+	&_upper {
+		top: 0;
+	}
+	&_lower {
+		bottom: 0;
+	}
+}

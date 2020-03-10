@@ -1,0 +1,158 @@
+$breakpoints: (
+		lg: 1440px,
+		md: 1439px,
+		sm: 1439px,
+		xs: 767px
+) !default;
+
+$media-direction: (
+		lg: min,
+		md: max,
+		sm: max,
+		xs: max
+) !default;
+
+$media-direction-default: max !default;
+
+@mixin css_property($property, $value){
+	@if type_of($value) == string{
+		#{$property}: unquote($value);
+	}@else{
+		#{$property}: $value;
+	}
+}
+
+@function splitScreens($string, $separator){
+	$sepId: str-index(quote($string), $separator);
+	
+	@if($sepId){
+		$array: (quote(str-slice($string, 0, $sepId - 1)), quote(str-slice($string, $sepId + 1)));
+		@return $array;
+	}@else{
+		@return $string;
+	}
+}
+
+//@media screen
+@mixin media($properties, $orientation: false){
+	
+	@each $property, $value in $properties {    // т.к. массив $properties это мапа (все свойства - это пара ключ:значение), ключ кладем в переменную $property,
+												// а значение - в переменную $value
+		@if type_of($value) == 'map' {  // Если значение тоже оказалось мапой
+			@each $screen, $val in $value { // то мы так же разделяем ключ:значение на переменные $screen и $val
+				$screen: splitScreens($screen, '-');    // делим значение $screen на части по знаку "-" на случай, если там указан какой-то диапозон.
+				
+				@if type_of($screen) == 'list'{ // если в результате получился список (т.е. пользователь передал диапазон),
+				 	$min_screen: nth($screen, 1);   // записываем первые 2 значения этого
+					$max_screen: nth($screen, 2);   // списка в переменные $min_screen и $max_screen
+					@if $min_screen == min or $min_screen == max{   //если первое значение равно "min" или "max"
+						$media-direction-default: $min_screen;  // меняем направление прохода медиазапроса в эту сторону
+						@if $orientation {
+							@if map-has-key($breakpoints,  $max_screen){
+								@media only screen and (#{map-get($media-direction, $screen)}-width: map-get($breakpoints, $max_screen)) and (orientation: $orientation){
+									@include css_property($property, $val);
+								}
+							}@else{
+								@media only screen and (#{$media-direction-default}-width: $max_screen)  and (orientation: $orientation){
+									@include css_property($property, $val);
+								}
+							}
+						} @else {
+							@if map-has-key($breakpoints,  $max_screen){ // если "max_screen" введен через ключ
+								@media only screen and (#{map-get($media-direction, $screen)}-width: map-get($breakpoints, $max_screen)){  // то мы используем значение этого ключа при создании медиа запроса
+									@include css_property($property, $val); // и после вводим название и значение стиля
+								}
+							} @else {
+								@media only screen and (#{$media-direction-default}-width: $max_screen) {
+									@include css_property($property, $val);
+								}
+							}
+						}
+					} @else {
+						@if $orientation {
+							@if map-has-key($breakpoints,  $min_screen) and map-has-key($breakpoints,  $max_screen){
+								@media only screen and (min-width: map-get($breakpoints, $min_screen)) and (max-width: map-get($breakpoints, $max_screen)) and (orientation: $orientation){
+									@include css_property($property, $val);
+								}
+							} @else if map-has-key($breakpoints,  $min_screen) and not map-has-key($breakpoints,  $max_screen){
+								@media only screen and (min-width: map-get($breakpoints, $min_screen)) and (max-width: $max_screen) and (orientation: $orientation){
+									@include css_property($property, $val);
+								}
+							} @else if not map-has-key($breakpoints,  $min_screen) and map-has-key($breakpoints,  $max_screen){
+								@media only screen and (min-width: $min_screen) and (max-width: map-get($breakpoints, $max_screen)) and (orientation: $orientation){
+									@include css_property($property, $val);
+								}
+							} @else {
+								@media only screen and (min-width: $min_screen) and (max-width: $max_screen) and (orientation: $orientation){
+									@include css_property($property, $val);
+								}
+							}
+						} @else {
+							@if map-has-key($breakpoints,  $min_screen) and map-has-key($breakpoints,  $max_screen){
+								@media only screen and (min-width: map-get($breakpoints, $min_screen)) and (max-width: map-get($breakpoints, $max_screen)){
+									@include css_property($property, $val);
+								}
+							} @else if map-has-key($breakpoints,  $min_screen) and not map-has-key($breakpoints,  $max_screen){
+								@media only screen and (min-width: map-get($breakpoints, $min_screen)) and (max-width: $max_screen){
+									@include css_property($property, $val);
+								}
+							} @else if not map-has-key($breakpoints,  $min_screen) and map-has-key($breakpoints,  $max_screen){
+								@media only screen and (min-width: $min_screen) and (max-width: map-get($breakpoints, $max_screen)){
+									@include css_property($property, $val);
+								}
+							} @else {
+								@media only screen and (min-width: $min_screen) and (max-width: $max_screen){
+									@include css_property($property, $val);
+								}
+							}
+						}
+					}
+				}@else{
+					@if $screen == 'print' { // На печать
+						@media print{
+							@include css_property($property, $val);
+						}
+					} @else {
+						@if $orientation {
+							@if map-has-key($breakpoints, $screen){
+								@media only screen and (#{map-get($media-direction, $screen)}-width: map-get($breakpoints, $screen)) and (orientation: $orientation){
+									@include css_property($property, $val);
+								}
+							} @else {
+								@if $screen == all {
+									@media only screen and (orientation: $orientation) {
+										@include css_property($property, $val);
+									}
+								} @else {
+									@media only screen and (#{$media-direction-default}-width: $screen) and (orientation: $orientation) {
+										@include css_property($property, $val);
+									}
+								}
+							}
+						} @else {
+							@if map-has-key($breakpoints, $screen){ // Вот это я использую большую часть времени
+								@media only screen and (#{map-get($media-direction, $screen)}-width: map-get($breakpoints, $screen)){
+									@include css_property($property, $val);
+								}
+							} @else {
+								@if $screen == all {
+									@include css_property($property, $val);
+								} @else {
+									@media only screen and (#{$media-direction-default}-width: $screen){
+										@include css_property($property, $val);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		} @else {
+			@if $property == 'extend' {
+				@extend #{unquote($value)} !optional;
+			}@else {
+				@include css_property($property, $value);
+			}
+		}
+	}
+};
